@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<%- include('../../fragments/header.ejs') %>
+<main>
+    <h2><%= __('zawodnicy.form.list.pageTitle')%></h2>
+    <p><%= __('zawodnicy.form.list.text')%></p>
+    <table class="table-list">
+        <thead>
+        <tr>
+            <th><%= __('zawodnicy.fields.Imie') %></th>
+            <th><%= __('zawodnicy.fields.Nazwisko') %></th>
+            <th><%= __('zawodnicy.fields.Pozycja') %></th>
+            <th><%= __('list.actions.title') %></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for(let zawodnik of zawodnicy) { %>
+            <tr>
+                <td><%= zawodnik.Imie %></td>
+                <td><%= zawodnik.Nazwisko %></td>
+                <td><%= zawodnik.Pozycja %></td>
+                <td>
+                    <ul class="list-actions">
+                        <li><a href="/zawodnicy/details/<%= zawodnik.ID_zawodnik %>"
+                               class="list-actions-button-details"><%= __('list.actions.details') %></a></li>
+                        <% if(loggedUser) { %>
+                            <li><a href="/zawodnicy/edit/<%= zawodnik.ID_zawodnik %>" class="list-actions-button-edit"><%= __('list.actions.edit') %></a>
+                            </li>
+                            <li><a href="/zawodnicy/delete/<%= zawodnik.ID_zawodnik %>"
+                                   class="list-actions-button-delete"><%= __('list.actions.delete') %></a></li>
+                        <% } %>
+                    </ul>
+                </td>
+            </tr>
+        <% } %>
+        </tbody>
+    </table>
+
+    <form class="form">
+        <div class="form-buttons">
+            <a href="/zawodnicy/add" class="button-add"><%= __('zawodnicy.form.list.btnLabel') %></a>
+        </div>
+    </form>
+
+</main>
+<%- include('../../fragments/footer.ejs') %>
+</html>

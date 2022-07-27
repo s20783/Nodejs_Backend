@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<%- include('../../fragments/header.ejs') %>
+<main>
+    <script type="application/javascript" src="/js/validationZawodnikForm.js"></script>
+    <h2><%= pageTitle %></h2>
+
+    <form class="form" method="post" action="<%= formAction %>" novalidate onsubmit="return validateForm()">
+        <label for="Imie"><%= __('zawodnicy.fields.Imie') %>: <span
+                    class="symbol-required"><%= (formMode == 'edit' || formMode == 'add') ? '*' : '' %></span></label>
+        <input type="text" name="Imie" id="Imie" placeholder="<%= __('zawodnicy.fields.placeholderImie')%>" required
+               value="<%= zawodnicy.Imie %>" <%= (formMode == 'details') ? 'disabled' : '' %>
+               class="<%= validationErrors.find(e => e.path.includes('Imie')) ? 'error-input' : '' %>"/>
+        <span id="errorImie" class="errors-text">
+            <% if (validationErrors.find(e => e.path.includes('Imie'))) { %>
+                <%= validationErrors.find(e => e.path.includes('Imie')).message %>
+            <% } %>
+        </span>
+
+        <label for="Nazwisko"><%= __('zawodnicy.fields.Nazwisko') %>: <span
+                    class="symbol-required"><%= (formMode == 'edit' || formMode == 'add') ? '*' : '' %></span></label>
+        <input type="text" name="Nazwisko" id="Nazwisko" placeholder="<%= __('zawodnicy.fields.placeholderNazwisko')%>" required
+               value="<%= zawodnicy.Nazwisko %>" <%= (formMode == 'details') ? 'disabled' : '' %>
+               class="<%= validationErrors.find(e => e.path.includes('Nazwisko')) ? 'error-input' : '' %>"/>
+        <span id="errorNazwisko" class="errors-text">
+            <% if (validationErrors.find(e => e.path.includes('Nazwisko'))) { %>
+                <%= validationErrors.find(e => e.path.includes('Nazwisko')).message %>
+            <% } %>
+        </span>
+
+
+        <label for="Pozycja"><%= __('zawodnicy.fields.Pozycja') %>: <span
+                    class="symbol-required"><%= (formMode == 'edit' || formMode == 'add') ? '*' : '' %></span></label>
+        <select name="Pozycja" id="Pozycja" <%= (formMode == 'details') ? 'disabled' : '' %>
+                class="<%= validationErrors.find(e => e.path.includes('Pozycja')) ? 'error-input' : '' %>">
+            <option value=""><%= __('zawodnicy.fields.PositionSelect') %></option>
+            <option value="Bramkarz"
+                    label="Bramkarz" <%= (zawodnicy.Pozycja == 'Bramkarz') ? 'selected' : '' %>></option>
+            <option value="Obrońca" label="Obrońca" <%= (zawodnicy.Pozycja == 'Obrońca') ? 'selected' : '' %>></option>
+            <option value="Pomocnik"
+                    label="Pomocnik" <%= (zawodnicy.Pozycja == 'Pomocnik') ? 'selected' : '' %>></option>
+            <option value="Napastnik"
+                    label="Napastnik" <%= (zawodnicy.Pozycja == 'Napastnik') ? 'selected' : '' %>></option>
+        </select>
+        <span id="errorPozycja" class="errors-text">
+            <% if (validationErrors.find(e => e.path.includes('Pozycja'))) { %>
+                <%= validationErrors.find(e => e.path.includes('Pozycja')).message %>
+            <% } %>
+        </span>
+
+        <input type="hidden" name="id"
+               value="<%= (formMode == 'details' || formMode == 'edit') ? zawodnicy.ID_zawodnik : '' %>">
+
+        <div style="display: none">
+            <span id="errorMessage"><%= __('validation.fieldRequired') %></span>
+        </div>
+        <div style="display: none">
+            <span id="errorMessage2"><%= __('validation.max40') %></span>
+        </div>
+        <div style="display: none">
+            <span id="errorMessage3"><%= __('validation.max20') %></span>
+        </div>
+
+        <% if(formMode === 'details') { %>
+            <table class="table-list">
+                <thead>
+                <tr>
+                    <th><%= __('kluby.fields.Nazwa') %></th>
+                    <th><%= __('klub_zawodnik.fields.Numer') %></th>
+                    <th><%= __('klub_zawodnik.fields.Od_kiedy') %></th>
+                    <th><%= __('klub_zawodnik.fields.Do_kiedy') %></th>
+                </tr>
+                </thead>
+                <tbody>
+                <% for(let zawodnik of zawodnicy.info) { %>
+                    <tr>
+                        <td><%= zawodnik.Nazwa %></td>
+                        <td><%= zawodnik.Numer %></td>
+                        <td><%= zawodnik.Od_kiedy === null ? '-' : zawodnik.Od_kiedy.toISOString().split('T')[0] %></td>
+                        <td><%= zawodnik.Do_kiedy === null ? '-' : zawodnik.Do_kiedy.toISOString().split('T')[0] %></td>
+                    </tr>
+                <% } %>
+                </tbody>
+            </table>
+        <% } %>
+
+        <div class="form-buttons">
+            <% if(formMode === 'details') { %>
+                <% if(loggedUser) { %>
+                    <a href="/zawodnicy/edit/<%= zawodnicy.ID_zawodnik %>" class="form-button-edit"><%= __('form.actions.edit') %></a>
+                <% } %>
+            <% } %>
+            <% if(formMode === 'edit') { %>
+                <input type="submit" value="<%= __('form.actions.save_changes') %>" class="button-add"/>
+            <% } %>
+            <% if(formMode === 'add') { %>
+                <input type="submit" value="<%= __('form.actions.add') %>" class="button-add"/>
+            <% } %>
+            <a href="/zawodnicy" class="form-button-cancel"><%= __('form.actions.return') %></a>
+        </div>
+    </form>
+</main>
+<%- include('../../fragments/footer.ejs') %>
+</html>

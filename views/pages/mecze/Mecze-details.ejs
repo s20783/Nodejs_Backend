@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<%- include('../../fragments/header.ejs') %>
+<main>
+    <script type="application/javascript" src="/js/meczeFunction.js"></script>
+    <h2><%= pageTitle %></h2>
+    <form class="form" method="post" action="<%= formAction %>" novalidate>
+
+        <label for="Gospodarz"><%= __('mecze.fields.Gospodarz') %>: <span
+                    class="symbol-required"><%= (formMode == 'edit') ? '*' : '' %></span></label>
+        <select datatype="number" name="Gospodarz" id="Gospodarz" <%= (formMode == 'details') ? 'disabled' : '' %>
+                class="<%= validationErrors.find(e => e.path.includes('Gospodarz')) ? 'error-input' : '' %>"/>
+        <option value=""><%= __('mecze.fields.KlubSelect') %></option>
+        <% for (let i = 0; i < kluby.length; i++) { %>
+            <option value="<%= kluby[i].ID_klub %>" label="<%= kluby[i].Nazwa %>"
+                    <%= (kluby[i].ID_klub == mecze.Gospodarz) ? 'selected' : '' %>></option>
+        <% } %>
+        </select>
+        <span id="errorGospodarz" class="errors-text">
+            <% if (validationErrors.find(e => e.path.includes('Gospodarz'))) { %>
+                <%= validationErrors.find(e => e.path.includes('Gospodarz')).message %>
+            <% } %>
+        </span>
+
+
+        <label for="Gosc"><%= __('mecze.fields.Gosc') %>: <span class="symbol-required"><%= (formMode == 'edit') ? '*' : '' %></span></label>
+        <select datatype="number" name="Gosc" id="Gosc" <%= (formMode == 'details') ? 'disabled' : '' %>
+                class="<%= validationErrors.find(e => e.path.includes('Gosc')) ? 'error-input' : '' %>"/>
+        <option value=""><%= __('mecze.fields.KlubSelect') %></option>
+        <% for (let i = 0; i < kluby.length; i++) { %>
+            <option value="<%= kluby[i].ID_klub %>" label="<%= kluby[i].Nazwa %>"
+                    <%= (kluby[i].ID_klub == mecze.Gosc) ? 'selected' : '' %>></option>
+        <% } %>
+        </select>
+        <span id="errorGosc" class="errors-text">
+            <% if (validationErrors.find(e => e.path.includes('Gosc'))) { %>
+                <%= validationErrors.find(e => e.path.includes('Gosc')).message %>
+            <% } %>
+        </span>
+
+
+        <label for="wynik"><%= __('mecze.fields.Wynik') %>: </label>
+        <input type="text" name="wynik" id="wynik"
+               value="<%= (formMode == 'details' || formMode == 'edit') ? mecze.Wynik : '' %>" disabled>
+        <span id="errorWynik"></span>
+
+
+        <label for="Data_meczu"><%= __('mecze.fields.Data_meczu') %>: <span
+                    class="symbol-required"><%= (formMode == 'edit') ? '*' : '' %></span></label>
+        <input type="datetime-local" name="Data_meczu" id="Data_meczu"
+               value="<%= (formMode == 'details' || formMode == 'edit') ? mecze.Data_meczu === null ? '-' : mecze.Data_meczu : '' %>" <%= (formMode == 'details') ? 'disabled' : '' %>>
+        <span id="errorDataMeczu"></span>
+
+
+        <label for="Sezon"><%= __('mecze.fields.Sezon') %>: <span
+                    class="symbol-required"><%= (formMode == 'edit') ? '*' : '' %></span></label>
+        <select datatype="number" name="Sezon" id="Sezon" <%= (formMode == 'details') ? 'disabled' : '' %>
+                class="<%= validationErrors.find(e => e.path.includes('Sezon')) ? 'error-input' : '' %>"/>
+        <option value=""><%= __('mecze.fields.SezonSelect') %></option>
+        <% for (let i = 0; i < sezony.length; i++) { %>
+            <option value="<%= sezony[i].ID_sezon %>" label="<%= sezony[i].Nazwa_sezonu %>"
+                    <%= (sezony[i].ID_sezon == mecze.Sezon) ? 'selected' : '' %>></option>
+        <% } %>
+        </select>
+        <span id="errorSezon" class="errors-text">
+            <% if (validationErrors.find(e => e.path.includes('Sezon'))) { %>
+                <%= validationErrors.find(e => e.path.includes('Sezon')).message %>
+            <% } %>
+        </span>
+
+        <input type="hidden" name="id" id="id"
+               value="<%= (formMode == 'details' || formMode == 'edit') ? mecze.ID_mecz : '' %>">
+
+        <div class="form-buttons">
+            <% if(formMode === 'edit') { %>
+            <input type="submit" value="<%= __('form.actions.save_changes') %>" class="button-add"/>
+            <% } %>
+        </div>
+
+    </form>
+    <h3><%= __('mecze.fields.Gospodarz') %></h3>
+    <% if(gospodarze !== '') { %>
+        <table class="table-list" id="table1">
+            <thead>
+            <tr>
+                <th><%= __('zawodnicy.fields.Imie') %></th>
+                <th><%= __('zawodnicy.fields.Nazwisko') %></th>
+                <th><%= __('klub_zawodnik.fields.Numer') %></th>
+                <th><%= __('zawodnicy.fields.Pozycja') %></th>
+                <th><%= __('mecze.fields.Gole') %></th>
+                <th><%= __('mecze.fields.Asysty') %></th>
+            </tr>
+            </thead>
+            <tbody>
+            <% for(let gospodarz of gospodarze) { %>
+                <tr>
+                    <td><%= gospodarz.Imie %></td>
+                    <td><%= gospodarz.Nazwisko %></td>
+                    <td><%= gospodarz.Numer %></td>
+                    <td><%= gospodarz.Pozycja %></td>
+                    <td>
+                        <% if(formMode === 'edit') { %>
+                            <a href="/wyniki/edit/goleDown/<%= mecze.ID_mecz %>/<%= gospodarz.ID_zawodnik %>"
+                               type="button" id="b-minus" class="button-minus">-</a>
+                        <% } %>
+                        <%= gospodarz.Gole %>
+                        <% if(formMode === 'edit') { %>
+                            <a href="/wyniki/edit/goleUp/<%= mecze.ID_mecz %>/<%= gospodarz.ID_zawodnik %>"
+                               type="button" id="b-plus" class="button-plus">+</a>
+                        <% } %>
+                    </td>
+                    <td>
+                        <% if(formMode === 'edit') { %>
+                            <a href="/wyniki/edit/asystyDown/<%= mecze.ID_mecz %>/<%= gospodarz.ID_zawodnik %>"
+                               id="b2-minus" class="button-minus">-</a>
+                        <% } %>
+                        <%= gospodarz.Asysty %>
+                        <% if(formMode === 'edit') { %>
+                            <a href="/wyniki/edit/asystyUp/<%= mecze.ID_mecz %>/<%= gospodarz.ID_zawodnik %>"
+                               id="b2-plus" class="button-plus">+</a>
+                        <% } %>
+                    </td>
+                </tr>
+            <% } %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p><%= __('mecze.fields.Empty') %></p>
+    <% } %>
+    <p></p>
+    <h3><%= __('mecze.fields.Gosc') %></h3>
+    <% if(goscie !== '') { %>
+        <table class="table-list" id="table2">
+            <thead>
+            <tr>
+                <th><%= __('zawodnicy.fields.Imie') %></th>
+                <th><%= __('zawodnicy.fields.Nazwisko') %></th>
+                <th><%= __('klub_zawodnik.fields.Numer') %></th>
+                <th><%= __('zawodnicy.fields.Pozycja') %></th>
+                <th><%= __('mecze.fields.Gole') %></th>
+                <th><%= __('mecze.fields.Asysty') %></th>
+            </tr>
+            </thead>
+            <tbody>
+            <% for(let gosc of goscie) { %>
+                <tr>
+                    <td><%= gosc.Imie %></td>
+                    <td><%= gosc.Nazwisko %></td>
+                    <td><%= gosc.Numer %></td>
+                    <td><%= gosc.Pozycja %></td>
+                    <td>
+                        <% if(formMode === 'edit') { %>
+                            <a href="/wyniki/edit/goleDown/<%= mecze.ID_mecz %>/<%= gosc.ID_zawodnik %>" id="b-minus2"
+                               class="button-minus">-</a>
+                        <% } %>
+                        <%= gosc.Gole %>
+                        <% if(formMode === 'edit') { %>
+                            <a href="/wyniki/edit/goleUp/<%= mecze.ID_mecz %>/<%= gosc.ID_zawodnik %>" id="b-plus2"
+                               class="button-plus">+</a>
+                        <% } %>
+                    </td>
+                    <td>
+                        <% if(formMode === 'edit') { %>
+                            <a href="/wyniki/edit/asystyDown/<%= mecze.ID_mecz %>/<%= gosc.ID_zawodnik %>"
+                               id="b2-minus2" class="button-minus">-</a>
+                        <% } %>
+                        <%= gosc.Asysty %>
+                        <% if(formMode === 'edit') { %>
+                            <a href="/wyniki/edit/asystyUp/<%= mecze.ID_mecz %>/<%= gosc.ID_zawodnik %>" id="b2-plus2"
+                               class="button-plus">+</a>
+                        <% } %>
+                    </td>
+                </tr>
+            <% } %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p><%= __('mecze.fields.Empty') %></p>
+    <% } %>
+    <form class="form">
+        <div class="form-buttons">
+            <% if(formMode === 'details') { %>
+                <a href="/wyniki/edit/<%= mecze.ID_mecz %>" class="form-button-edit"><%= __('form.actions.edit') %></a>
+            <% } %>
+            <a href="/wyniki" class="form-button-cancel"><%= __('form.actions.return') %></a>
+        </div>
+    </form>
+</main>
+<%- include('../../fragments/footer.ejs') %>
+</html>

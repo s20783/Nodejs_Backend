@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<%- include('../../fragments/header.ejs') %>
+<main>
+    <h2><%= pageTitle %></h2>
+
+    <table class="table-list">
+        <thead>
+        <tr>
+            <th><%= __('sezony.fields.Nazwa_sezonu') %></th>
+            <th><%= __('sezony.fields.Data_rozpoczecia') %></th>
+            <th><%= __('sezony.fields.Data_zakonczenia') %></th>
+            <th><%= __('list.actions.title') %></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for(let sezon of sezony) { %>
+            <tr>
+                <td><%= sezon.Nazwa_sezonu %></td>
+                <td><%= sezon.Data_rozpoczecia === null ? '-' : new Date(sezon.Data_rozpoczecia.getTime() + (60*60*1000)).toISOString().split('T')[0] %></td>
+                <td><%= sezon.Data_zakonczenia === null ? '-' : new Date(sezon.Data_zakonczenia.getTime() + (60*60*1000)).toISOString().split('T')[0] %></td>
+
+                <td>
+                    <ul class="list-actions">
+                        <li><a href="/sezony/details/<%= sezon.ID_sezon %>" class="list-actions-button-details"><%= __('list.actions.details') %></a></li>
+                        <% if(loggedUser) { %>
+                            <li><a href="/sezony/edit/<%= sezon.ID_sezon %>" class="list-actions-button-edit"><%= __('list.actions.edit') %></a></li>
+                            <li><a href="/sezony/delete/<%= sezon.ID_sezon %>" class="list-actions-button-delete"><%= __('list.actions.delete') %></a></li>
+                        <% } %>
+                    </ul>
+                </td>
+            </tr>
+        <% } %>
+        </tbody>
+    </table>
+        <form class="form">
+            <div class="form-buttons">
+                <a href="/sezony/add" class="button-add"><%= __('sezony.form.list.btnLabel') %></a>
+            </div>
+        </form>
+</main>
+<%- include('../../fragments/footer.ejs') %>
+</html>

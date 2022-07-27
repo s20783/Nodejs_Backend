@@ -1,0 +1,1 @@
+module.exports = { secret: 'x_secret_key_x_20783' }

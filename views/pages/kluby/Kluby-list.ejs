@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<%- include('../../fragments/header.ejs') %>
+<main>
+    <h2><%= __('kluby.form.list.pageTitle')%></h2>
+    <p><%= __('kluby.form.list.text')%></p>
+    <table class="table-list">
+        <thead>
+        <tr>
+            <th><%= __('kluby.fields.Nazwa') %></th>
+            <th><%= __('kluby.fields.Skrot') %></th>
+            <th><%= __('kluby.fields.Kolor_stroju') %></th>
+            <th><%= __('list.actions.title') %></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for(let klub of kluby) { %>
+            <tr>
+                <td><%= klub.Nazwa %></td>
+                <td><%= klub.Skrot %></td>
+                <td><%= klub.Kolor_stroju %></td>
+                <td>
+                    <ul class="list-actions">
+                        <li><a href="/kluby/details/<%= klub.ID_klub %>" class="list-actions-button-details"><%= __('list.actions.details') %></a></li>
+                        <% if(loggedUser) { %>
+                            <li><a href="/kluby/edit/<%= klub.ID_klub %>" class="list-actions-button-edit"><%= __('list.actions.edit') %></a></li>
+                            <li><a href="/kluby/delete/<%= klub.ID_klub %>" class="list-actions-button-delete"><%= __('list.actions.delete') %></a></li>
+                        <% } %>
+                    </ul>
+                </td>
+            </tr>
+        <% } %>
+        </tbody>
+    </table>
+    <% if(loggedUser) { %>
+    <form class="form">
+        <div class="form-buttons">
+            <a href="/kluby/add" class="button-add"><%= __('kluby.form.list.btnLabel') %></a>
+        </div>
+    </form>
+    <% } %>
+</main>
+<%- include('../../fragments/footer.ejs') %>
+</html>

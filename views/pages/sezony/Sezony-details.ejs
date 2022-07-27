@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<%- include('../../fragments/header.ejs') %>
+<main>
+    <h2><%= pageTitle %></h2>
+
+    <form class="form" novalidate >
+
+        <label for="Nazwa_sezonu"><%= __('sezony.fields.Nazwa_sezonu') %>: <span class="symbol-required"></span></label>
+        <input type="text" name="Nazwa_sezonu" id="Nazwa_sezonu"
+               value="<%= sezony.Nazwa_sezonu  %>" disabled>
+        <span id="errorNumer" class="errors-text"></span>
+
+        <label for="Data_rozpoczecia"><%= __('sezony.fields.Data_rozpoczecia') %>: <span class="symbol-required"></span></label>
+        <input type="date" name="Data_rozpoczecia" id="Data_rozpoczecia"
+               value="<%= (sezony.Data_rozpoczecia == null ? '-' : sezony.Data_rozpoczecia) %>" disabled>
+        <span id="errorDataOd" class="errors-text"></span>
+
+        <label for="Data_zakonczenia"><%= __('sezony.fields.Data_zakonczenia') %>: <span class="symbol-required"></span></label>
+        <input type="date" name="Data_zakonczenia" id="Data_zakonczenia"
+               value="<%= (sezony.Data_zakonczenia == null ? '-' : sezony.Data_zakonczenia) %>" disabled>
+        <span id="errorDataDo" class="errors-text"></span>
+
+        <input type="hidden" name="id"
+               value="<%= (formMode == 'details' || formMode == 'edit') ? sezony.ID_sezon : '' %>">
+
+        <table class="table-list">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th><%= __('kluby.fields.Nazwa') %></th>
+                <th><%= __('sezony.fields.Mecze') %></th>
+                <th><%= __('sezony.fields.Punkty') %></th>
+                <th><%= __('sezony.fields.Bramki') %></th>
+                <th><%= __('sezony.fields.Rezultaty') %></th>
+            </tr>
+            </thead>
+            <tbody>
+            <% let i=0; %>
+            <% for(let gol of stats.info) { i++; %>
+                <tr>
+                    <td><%= i %></td>
+                    <td><%= gol.Nazwa%></td>
+                    <td><%= gol.Played %></td>
+                    <td><b><%= gol.Punkty%></b></td>
+                    <td><%= gol.GoleStrzelone %>-<%= gol.GoleStracone %>  <%=gol.GoleRoznica%></td>
+                    <td><%= gol.Z %>-<%= gol.R %>-<%= gol.P %></td>
+
+                </tr>
+            <% } %>
+            </tbody>
+        </table>
+
+        <p></p>
+        <p></p>
+        <table class="table-list">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th><%= __('zawodnicy.fields.Imie') %></th>
+                <th><%= __('zawodnicy.fields.Nazwisko') %></th>
+                <th><%= __('kluby.fields.Nazwa') %></th>
+                <th><%= __('sezony.fields.Gole') %></th>
+            </tr>
+            </thead>
+            <tbody>
+            <% let k=0; %>
+            <% for(let gol of gole.info) { k++; %>
+            <tr>
+                <td><%= k %></td>
+                <td><%= gol.Imie%></td>
+                <td><%= gol.Nazwisko %></td>
+                <td><%= gol.Klub %></td>
+                <td><b><%= gol.Gole%></b></td>
+            </tr>
+            <% } %>
+            </tbody>
+        </table>
+
+
+        <p></p>
+        <p></p>
+        <table class="table-list">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th><%= __('zawodnicy.fields.Imie') %></th>
+                <th><%= __('zawodnicy.fields.Nazwisko') %></th>
+                <th><%= __('sezony.fields.Asysty') %></th>
+            </tr>
+            </thead>
+            <tbody>
+            <% let l=0; %>
+            <% for(let asysta of asysty.info) { l++; %>
+            <tr>
+                <td><%= l %></td>
+                <td><%= asysta.Imie%></td>
+                <td><%= asysta.Nazwisko %></td>
+                <td><b><%= asysta.Asysty%></b></td>
+            </tr>
+            <% } %>
+            </tbody>
+        </table>
+
+        <div class="form-buttons">
+            <a href="/sezony" class="form-button-cancel"><%= __('form.actions.return') %></a>
+        </div>
+    </form>
+</main>
+<%- include('../../fragments/footer.ejs') %>
+</html>

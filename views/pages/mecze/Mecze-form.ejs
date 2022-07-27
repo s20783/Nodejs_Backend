@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<%- include('../../fragments/header.ejs') %>
+<main>
+    <h2><%= pageTitle %></h2>
+    <form class="form" method="post" action="<%= formAction %>" novalidate>
+
+        <label for="Gospodarz"><%= __('mecze.fields.Gospodarz') %>: <span class="symbol-required">*</span></label>
+        <select datatype="number" name="Gospodarz" id="Gospodarz" <%= (formMode == 'details') ? 'disabled' : '' %>
+                class="<%= validationErrors.find(e => e.path.includes('Gospodarz')) ? 'error-input' : '' %>"/>
+        <option value=""><%= __('mecze.fields.KlubSelect') %></option>
+        <% for (let i = 0; i < kluby.length; i++) {  %>
+            <option value="<%= kluby[i].ID_klub %>" label="<%= kluby[i].Nazwa %>"
+                    <%= (kluby[i].ID_klub == mecze.Gospodarz) ? 'selected' : '' %>></option>
+        <% } %>
+        </select>
+        <span id="errorGospodarz" class="errors-text">
+            <% if (validationErrors.find(e => e.path.includes('Gospodarz'))) { %>
+                <%= validationErrors.find(e => e.path.includes('Gospodarz')).message %>
+            <% } %>
+        </span>
+
+        <label for="Gosc"><%= __('mecze.fields.Gosc') %>: <span class="symbol-required">*</span></label>
+        <select datatype="number" name="Gosc" id="Gosc" <%= (formMode == 'details') ? 'disabled' : '' %>
+                class="<%= validationErrors.find(e => e.path.includes('Gosc')) ? 'error-input' : '' %>"/>
+        <option value=""><%= __('mecze.fields.KlubSelect') %></option>
+        <% for (let i = 0; i < kluby.length; i++) {  %>
+            <option value="<%= kluby[i].ID_klub %>" label="<%= kluby[i].Nazwa %>"
+                    <%= (kluby[i].ID_klub == mecze.Gosc) ? 'selected' : '' %>></option>
+        <% } %>
+        </select>
+        <span id="errorGosc" class="errors-text">
+            <% if (validationErrors.find(e => e.path.includes('Gosc'))) { %>
+                <%= validationErrors.find(e => e.path.includes('Gosc')).message %>
+            <% } %>
+        </span>
+
+        <label for="Data_meczu"><%= __('mecze.fields.Data_meczu') %>: </label>
+        <input type="datetime-local" name="Data_meczu" id="Data_meczu">
+        <span id="errorDataMeczu" class="errors-text"></span>
+
+        <label for="Sezon"><%= __('mecze.fields.Sezon') %>: <span class="symbol-required">*</span></label>
+        <select datatype="number" name="Sezon" id="Sezon" <%= (formMode == 'details') ? 'disabled' : '' %>
+                class="<%= validationErrors.find(e => e.path.includes('Sezon')) ? 'error-input' : '' %>"/>
+        <option value=""><%= __('mecze.fields.SezonSelect') %></option>
+        <% for (let i = 0; i < sezony.length; i++) {  %>
+            <option value="<%= sezony[i].ID_sezon %>" label="<%= sezony[i].Nazwa_sezonu %>"
+                    <%= (sezony[i].ID_sezon == mecze.Sezon) ? 'selected' : '' %>></option>
+        <% } %>
+        </select>
+        <span id="errorSezon" class="errors-text">
+            <% if (validationErrors.find(e => e.path.includes('Sezon'))) { %>
+                <%= validationErrors.find(e => e.path.includes('Sezon')).message %>
+            <% } %>
+        </span>
+
+        <div class="form-buttons">
+            <input type="submit" class="form-button-submit" value="<%= __('form.actions.add') %>">
+            <a href="/wyniki" class="form-button-cancel"><%= __('form.actions.return') %></a>
+        </div>
+    </form>
+</main>
+<%- include('../../fragments/footer.ejs') %>
+</html>

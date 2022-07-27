@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<%- include('../../fragments/header.ejs') %>
+<main>
+    <h2><%= __('mecze.form.list.pageTitle')%></h2>
+    <table class="table-list">
+        <thead>
+        <tr>
+            <th><%= __('mecze.fields.Data_meczu') %></th>
+            <th><%= __('mecze.fields.Gospodarz') %></th>
+            <th><%= __('mecze.fields.Wynik') %></th>
+            <th><%= __('mecze.fields.Gosc') %></th>
+            <th><%= __('mecze.fields.Sezon') %></th>
+            <th><%= __('list.actions.title') %></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for(let mecz of mecze) { %>
+            <tr>
+                <td><%= mecz.Data_meczu === null ? '-' : mecz.Data_meczu.toISOString().split('T')[0] + ' ' + mecz.Data_meczu.toLocaleTimeString().split(':')[0] + ':' + mecz.Data_meczu.toLocaleTimeString().split(':')[1] %></td>
+                <td><%= mecz.Gospodarz %></td>
+                <td><%= mecz.Wynik %></td>
+                <td><%= mecz.Gosc %></td>
+                <td><%= mecz.Sezon %></td>
+                <td>
+                    <ul class="list-actions">
+                        <li><a href="/wyniki/details/<%= mecz.ID_mecz %>"
+                               class="list-actions-button-details"><%= __('list.actions.details') %></a></li>
+
+                            <li><a href="/wyniki/edit/<%= mecz.ID_mecz%>" class="list-actions-button-edit"><%= __('list.actions.edit') %></a></li>
+                            <li><a href="/wyniki/delete/<%= mecz.ID_mecz %>" class="list-actions-button-delete"><%= __('list.actions.delete') %></a></li>
+                        <% if(loggedUser) { %>
+                        <% } %>
+                    </ul>
+                </td>
+            </tr>
+        <% } %>
+        </tbody>
+    </table>
+
+        <form class="form">
+            <div class="form-buttons">
+                <a href="/wyniki/add" class="button-add"><%= __('mecze.form.list.btnLabel')%></a>
+            </div>
+        </form>
+
+</main>
+<%- include('../../fragments/footer.ejs') %>
+</html>

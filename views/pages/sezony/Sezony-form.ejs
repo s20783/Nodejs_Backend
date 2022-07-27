@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<%- include('../../fragments/header.ejs') %>
+<main>
+    <h2><%= pageTitle %></h2>
+
+    <form class="form" method="post" action="<%= formAction %>" novalidate >
+
+        <label for="Nazwa_sezonu"><%= __('sezony.fields.Nazwa_sezonu') %>: <span
+                    class="symbol-required"><%= (formMode == 'edit' || formMode == 'add') ? '*' : '' %></span></label>
+        <input type="text"  name="Nazwa_sezonu" id="Nazwa_sezonu" placeholder="<%= __('sezony.fields.placeholderNazwa')%>"
+               value="<%= sezony.Nazwa_sezonu  %>" required
+               class="<%= validationErrors.find(e => e.path.includes('Nazwa_sezonu')) ? 'error-input' : '' %>">
+        <span id="errorNumer" class="errors-text">
+            <% if (validationErrors.find(e => e.path.includes('Nazwa_sezonu'))) { %>
+                <%= validationErrors.find(e => e.path.includes('Nazwa_sezonu')).message %>
+            <% } %>
+        </span>
+
+        <label for="Data_rozpoczecia"><%= __('sezony.fields.Data_rozpoczecia') %>: <span
+                    class="symbol-required"><%= (formMode == 'edit' || formMode == 'add') ? '*' : '' %></span></label>
+        <input type="date" name="Data_rozpoczecia" id="Data_rozpoczecia"
+               value="<%= (sezony.Data_rozpoczecia == null ? '-' : sezony.Data_rozpoczecia) %>" required
+               class="<%= validationErrors.find(e => e.path.includes('Data_rozpoczecia')) ? 'error-input' : '' %>">
+        <span id="errorDataOd" class="errors-text">
+            <% if (validationErrors.find(e => e.path.includes('Data_rozpoczecia'))) { %>
+                <%= validationErrors.find(e => e.path.includes('Data_rozpoczecia')).message %>
+            <% } %>
+        </span>
+
+        <label for="Data_zakonczenia"><%= __('sezony.fields.Data_zakonczenia') %>: <span
+                    class="symbol-required"><%= (formMode == 'edit' || formMode == 'add') ? '*' : '' %></span></label>
+        <input type="date" name="Data_zakonczenia" id="Data_zakonczenia"
+               value="<%= (sezony.Data_zakonczenia == null ? '-' : sezony.Data_zakonczenia) %>"
+               class="<%= validationErrors.find(e => e.path.includes('Data_zakonczenia')) ? 'error-input' : '' %>">
+        <span id="errorDataDo" class="errors-text">
+            <% if (validationErrors.find(e => e.path.includes('Data_zakonczenia'))) { %>
+                <%= validationErrors.find(e => e.path.includes('Data_zakonczenia')).message %>
+            <% } %>
+        </span>
+
+        <input type="hidden" name="id"
+               value="<%= (formMode == 'details' || formMode == 'edit') ? sezony.ID_sezon : '' %>">
+
+        <div class="form-buttons">
+            <% if(formMode === 'edit') { %>
+                <input type="submit" value="<%= __('form.actions.save_changes') %>" class="button-add"/>
+            <% } %>
+            <% if(formMode === 'add') { %>
+                <input type="submit" value="<%= __('form.actions.add') %>" class="button-add"/>
+            <% } %>
+            <a href="/sezony" class="form-button-cancel"><%= __('form.actions.return') %></a>
+        </div>
+    </form>
+</main>
+<%- include('../../fragments/footer.ejs') %>
+</html>

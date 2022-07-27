@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<%- include('../../fragments/header.ejs') %>
+<main>
+    <h2><%= pageTitle %></h2>
+
+    <form class="form" method="post" action="<%= formAction %>" novalidate onsubmit="return validateForm()">
+        <label for="klub"><%= __('klub_zawodnik.fields.Klub') %>: <span
+                    class="symbol-required"><%= (formMode == 'edit' || formMode == 'add') ? '*' : '' %></span></label>
+        <select name="klub" id="klub" <%= (formMode == 'details') ? 'disabled' : '' %>>
+            <option value="">--Wybierz klub--</option>
+            <% for (let i = 0; i < klubyAll.length; i++) { let kz = klubyAll[i]; %>
+            <option value="<%= kz.ID_klub %>" label="<%= kz.Nazwa %>"
+                    <%= (kz.ID_klub == kzy.ID_klub) ? 'selected' : '' %>></option>
+            <% } %>
+        </select>
+        <span id="errorKlub" class="errors-text"></span>
+
+
+        <label for="zawodnik"><%= __('klub_zawodnik.fields.Zawodnik') %>: <span
+                    class="symbol-required"><%= (formMode == 'edit' || formMode == 'add') ? '*' : '' %></span></label>
+        <select name="zawodnik" id="zawodnik" <%= (formMode == 'details') ? 'disabled' : '' %>>
+            <option value="">--Wybierz zawodnika--</option>
+            <% for (let i = 0; i < zawodnicyAll.length; i++) { let z = zawodnicyAll[i]; %>
+            <option value="<%= z.ID_zawodnik %>" label="<%= z.Imie + ' ' + z.Nazwisko + ' - ' + z.Pozycja %>"
+                    <%= (z.ID_zawodnik == kzy.ID_zawodnik) ? 'selected' : '' %>></option>
+            <% } %>
+        </select>
+        <span id="errorZawodnik" class="errors-text"></span>
+
+
+    </form>
+    <% if(formMode === 'details') { %>
+        <table class="table-list">
+            <thead>
+            <tr>
+                <th><%= __('klub_zawodnik.fields.Numer') %></th>
+                <th><%= __('klub_zawodnik.fields.Od_kiedy') %></th>
+                <th><%= __('klub_zawodnik.fields.Do_kiedy') %></th>
+                <% if(loggedUser) { %>
+                    <th><%= __('list.actions.title') %></th>
+                <% } %>
+            </tr>
+            </thead>
+            <tbody>
+            <% for(let kz of kzy.info) { %>
+                <tr>
+                    <td><%= kz.Numer %></td>
+                    <td><%= kz.Od_kiedy === null ? '-' : kz.Od_kiedy %></td>
+                    <td><%= kz.Do_kiedy === null ? '-' : new Date(kz.Do_kiedy.getTime() + (60*60*1000)).toISOString().split('T')[0] %></td>
+                    <% if(loggedUser) { %>
+                        <td>
+                            <ul class="list-actions">
+                                <li><a href="/klub_zawodnik/edit/<%= kz.ID_klub_zawodnik %>"
+                                       class="list-actions-button-edit"><%= __('list.actions.edit') %></a></li>
+
+                                <li><a href="/klub_zawodnik/delete/<%= kz.ID_klub_zawodnik %>"
+                                       class="list-actions-button-delete"><%= __('list.actions.delete') %></a></li>
+                            </ul>
+                        </td>
+                    <% } %>
+                </tr>
+            <% } %>
+            </tbody>
+        </table>
+    <% } %>
+    <form class="form">
+        <div class="form-buttons">
+            <% if(formMode === 'edit') { %>
+                <input type="submit" value="<%= __('form.actions.save_changes') %>" class="button-add"/>
+            <% } %>
+            <% if(formMode === 'add') { %>
+                <input type="submit" value="<%= __('form.actions.add') %>" class="button-add"/>
+            <% } %>
+            <a href="/klub_zawodnik" class="form-button-cancel"><%= __('form.actions.return') %></a>
+        </div>
+    </form>
+</main>
+<%- include('../../fragments/footer.ejs') %>
+</html>
